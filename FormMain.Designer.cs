@@ -49,6 +49,8 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -71,7 +73,7 @@
             // 
             // m_button_Cancel
             // 
-            this.m_button_Cancel.Location = new System.Drawing.Point(12, 13);
+            this.m_button_Cancel.Location = new System.Drawing.Point(12, 9);
             this.m_button_Cancel.Name = "m_button_Cancel";
             this.m_button_Cancel.Size = new System.Drawing.Size(75, 23);
             this.m_button_Cancel.TabIndex = 5;
@@ -84,7 +86,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(716, 17);
+            this.label1.Location = new System.Drawing.Point(716, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(36, 13);
             this.label1.TabIndex = 4;
@@ -93,7 +95,7 @@
             // m_textBox_Depth
             // 
             this.m_textBox_Depth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_textBox_Depth.Location = new System.Drawing.Point(758, 15);
+            this.m_textBox_Depth.Location = new System.Drawing.Point(758, 11);
             this.m_textBox_Depth.Name = "m_textBox_Depth";
             this.m_textBox_Depth.Size = new System.Drawing.Size(58, 20);
             this.m_textBox_Depth.TabIndex = 3;
@@ -102,7 +104,7 @@
             // m_button_ChangeDirectory
             // 
             this.m_button_ChangeDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_button_ChangeDirectory.Location = new System.Drawing.Point(644, 13);
+            this.m_button_ChangeDirectory.Location = new System.Drawing.Point(644, 9);
             this.m_button_ChangeDirectory.Name = "m_button_ChangeDirectory";
             this.m_button_ChangeDirectory.Size = new System.Drawing.Size(27, 23);
             this.m_button_ChangeDirectory.TabIndex = 2;
@@ -114,7 +116,7 @@
             // 
             this.m_textBox_Directory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_textBox_Directory.Location = new System.Drawing.Point(93, 15);
+            this.m_textBox_Directory.Location = new System.Drawing.Point(93, 11);
             this.m_textBox_Directory.Name = "m_textBox_Directory";
             this.m_textBox_Directory.Size = new System.Drawing.Size(545, 20);
             this.m_textBox_Directory.TabIndex = 1;
@@ -150,7 +152,7 @@
             // openFolderToolStripMenuItem
             // 
             this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
-            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.openFolderToolStripMenuItem.Text = "Open Folder";
             this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.openFolderToolStripMenuItem_Click);
             // 
