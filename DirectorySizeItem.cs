@@ -1,18 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Drawing;
+using Delimon.Win32.IO;
 using System.Linq;
 using System.Text;
 
 namespace DirectoryReporter
 {
-    
-    public class DirectoryInfo
+    public interface IDirectoryInfo
+    {
+        string Path { get; }
+        string Info { get; }
+        Color Color { get; }
+        bool IsDirectory { get; }
+        List<IDirectoryInfo> Children { get; }
+        long Populate();
+    }
+
+    public class DirectorySizeItem : IDirectoryInfo
     {
         public string Path { get; private set; }
         public long FilesSize { get; private set; }
         public long TotalSize { get; private set; }
-        public List<DirectoryInfo> SubDirectories { get; private set; }
+        public List<IDirectoryInfo> Children { get; private set; }
+
+        public bool IsDirectory
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public string Info
+        {
+            get
+            {
+                return string.Format("{0}({1})", System.IO.Path.GetFileName(Path).PadRight(20), TotalSize.ToFileSize());
+            }
+        }
+
+        public Color Color
+        {
+            get
+            {
+                return TotalSize > 1000000000 ? Color.Red : Color.Black;
+            }
+        }
 
         public static class Activity
         {
@@ -20,29 +54,24 @@ namespace DirectoryReporter
             public static bool Cancel { get; set; }
         }
 
-        public DirectoryInfo(string path)
+        public DirectorySizeItem(string path)
         {
             Path = path;
 
             FilesSize = 0;
             TotalSize = 0;
 
-            SubDirectories = new List<DirectoryInfo>();
+            Children = new List<IDirectoryInfo>();
         }
 
-        public string DirectoryName
-        {
-            get { return Path.Substring(Path.LastIndexOf("\\") + 1); }
-        }
-
-        public void Populate()
+        public long Populate()
         {
             FilesSize = GetDirectorySize(Path);
             TotalSize = FilesSize;
 
             foreach (var subDirectory in Directory.GetDirectories(Path))
             {
-                var dirName = subDirectory.Substring(subDirectory.LastIndexOf("\\") + 1);
+                var dirName = System.IO.Path.GetFileName(subDirectory);
                 if (dirName.StartsWith("$"))
                 {
                     continue;
@@ -50,24 +79,26 @@ namespace DirectoryReporter
 
                 if (Activity.Cancel == true)
                 {
-                    return;
+                    return TotalSize;
                 }
 
                 Activity.CurrentDirectory = subDirectory;
 
-                var subDirectoryInfo = new DirectoryInfo(subDirectory);
+                var subDirectoryInfo = new DirectorySizeItem(subDirectory);
 
                 try
                 {
                     subDirectoryInfo.Populate();
                     TotalSize += subDirectoryInfo.TotalSize;
-                    SubDirectories.Add(subDirectoryInfo);
+                    Children.Add(subDirectoryInfo);
                 }
                 catch (Exception e)
                 {
                     var err = e.Message;
                 }
             }
+
+            return TotalSize;
         }
 
         static long GetDirectorySize(string baseDirectory)

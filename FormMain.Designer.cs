@@ -30,15 +30,19 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.m_button_Cancel = new System.Windows.Forms.Button();
+            this.m_comboBox_Mode = new System.Windows.Forms.ComboBox();
+            this.m_button_ChangeDirectory2 = new System.Windows.Forms.Button();
+            this.m_textBox_Directory2 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.m_textBox_Depth = new System.Windows.Forms.TextBox();
             this.m_button_ChangeDirectory = new System.Windows.Forms.Button();
             this.m_textBox_Directory = new System.Windows.Forms.TextBox();
             this.m_button_Start = new System.Windows.Forms.Button();
+            this.m_button_Cancel = new System.Windows.Forms.Button();
             this.m_DirectoryReport = new System.Windows.Forms.TreeView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.m_button_SyncItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -57,30 +61,59 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.m_button_Cancel);
+            this.splitContainer1.Panel1.Controls.Add(this.m_comboBox_Mode);
+            this.splitContainer1.Panel1.Controls.Add(this.m_button_ChangeDirectory2);
+            this.splitContainer1.Panel1.Controls.Add(this.m_textBox_Directory2);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.m_textBox_Depth);
             this.splitContainer1.Panel1.Controls.Add(this.m_button_ChangeDirectory);
             this.splitContainer1.Panel1.Controls.Add(this.m_textBox_Directory);
             this.splitContainer1.Panel1.Controls.Add(this.m_button_Start);
+            this.splitContainer1.Panel1.Controls.Add(this.m_button_Cancel);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.m_DirectoryReport);
             this.splitContainer1.Size = new System.Drawing.Size(828, 644);
-            this.splitContainer1.SplitterDistance = 38;
+            this.splitContainer1.SplitterDistance = 63;
             this.splitContainer1.TabIndex = 0;
             // 
-            // m_button_Cancel
+            // m_comboBox_Mode
             // 
-            this.m_button_Cancel.Location = new System.Drawing.Point(12, 9);
-            this.m_button_Cancel.Name = "m_button_Cancel";
-            this.m_button_Cancel.Size = new System.Drawing.Size(75, 23);
-            this.m_button_Cancel.TabIndex = 5;
-            this.m_button_Cancel.Text = "Cancel";
-            this.m_button_Cancel.UseVisualStyleBackColor = true;
-            this.m_button_Cancel.Visible = false;
-            this.m_button_Cancel.Click += new System.EventHandler(this.m_button_Cancel_Click);
+            this.m_comboBox_Mode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.m_comboBox_Mode.FormattingEnabled = true;
+            this.m_comboBox_Mode.Items.AddRange(new object[] {
+            "Size Report",
+            "Differences"});
+            this.m_comboBox_Mode.Location = new System.Drawing.Point(695, 37);
+            this.m_comboBox_Mode.Name = "m_comboBox_Mode";
+            this.m_comboBox_Mode.Size = new System.Drawing.Size(121, 21);
+            this.m_comboBox_Mode.TabIndex = 8;
+            this.m_comboBox_Mode.Text = "Size Report";
+            this.m_comboBox_Mode.SelectedIndexChanged += new System.EventHandler(this.m_comboBox_Mode_SelectedIndexChanged);
+            // 
+            // m_button_ChangeDirectory2
+            // 
+            this.m_button_ChangeDirectory2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.m_button_ChangeDirectory2.Enabled = false;
+            this.m_button_ChangeDirectory2.Location = new System.Drawing.Point(644, 35);
+            this.m_button_ChangeDirectory2.Name = "m_button_ChangeDirectory2";
+            this.m_button_ChangeDirectory2.Size = new System.Drawing.Size(27, 23);
+            this.m_button_ChangeDirectory2.TabIndex = 7;
+            this.m_button_ChangeDirectory2.Text = "...";
+            this.m_button_ChangeDirectory2.UseVisualStyleBackColor = true;
+            this.m_button_ChangeDirectory2.Click += new System.EventHandler(this.m_button_ChangeDirectory2_Click);
+            // 
+            // m_textBox_Directory2
+            // 
+            this.m_textBox_Directory2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.m_textBox_Directory2.Enabled = false;
+            this.m_textBox_Directory2.Location = new System.Drawing.Point(93, 37);
+            this.m_textBox_Directory2.Name = "m_textBox_Directory2";
+            this.m_textBox_Directory2.Size = new System.Drawing.Size(545, 20);
+            this.m_textBox_Directory2.TabIndex = 6;
+            this.m_textBox_Directory2.Text = "c:\\";
             // 
             // label1
             // 
@@ -99,7 +132,7 @@
             this.m_textBox_Depth.Name = "m_textBox_Depth";
             this.m_textBox_Depth.Size = new System.Drawing.Size(58, 20);
             this.m_textBox_Depth.TabIndex = 3;
-            this.m_textBox_Depth.Text = "8";
+            this.m_textBox_Depth.Text = "99";
             // 
             // m_button_ChangeDirectory
             // 
@@ -124,13 +157,24 @@
             // 
             // m_button_Start
             // 
-            this.m_button_Start.Location = new System.Drawing.Point(12, 12);
+            this.m_button_Start.Location = new System.Drawing.Point(12, 10);
             this.m_button_Start.Name = "m_button_Start";
             this.m_button_Start.Size = new System.Drawing.Size(75, 23);
             this.m_button_Start.TabIndex = 0;
             this.m_button_Start.Text = "Start";
             this.m_button_Start.UseVisualStyleBackColor = true;
             this.m_button_Start.Click += new System.EventHandler(this.m_button_Start_Click);
+            // 
+            // m_button_Cancel
+            // 
+            this.m_button_Cancel.Location = new System.Drawing.Point(12, 9);
+            this.m_button_Cancel.Name = "m_button_Cancel";
+            this.m_button_Cancel.Size = new System.Drawing.Size(75, 23);
+            this.m_button_Cancel.TabIndex = 5;
+            this.m_button_Cancel.Text = "Cancel";
+            this.m_button_Cancel.UseVisualStyleBackColor = true;
+            this.m_button_Cancel.Visible = false;
+            this.m_button_Cancel.Click += new System.EventHandler(this.m_button_Cancel_Click);
             // 
             // m_DirectoryReport
             // 
@@ -139,15 +183,16 @@
             this.m_DirectoryReport.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_DirectoryReport.Location = new System.Drawing.Point(0, 0);
             this.m_DirectoryReport.Name = "m_DirectoryReport";
-            this.m_DirectoryReport.Size = new System.Drawing.Size(828, 602);
+            this.m_DirectoryReport.Size = new System.Drawing.Size(828, 577);
             this.m_DirectoryReport.TabIndex = 0;
             // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openFolderToolStripMenuItem});
+            this.openFolderToolStripMenuItem,
+            this.m_button_SyncItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(140, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(140, 48);
             // 
             // openFolderToolStripMenuItem
             // 
@@ -155,6 +200,14 @@
             this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.openFolderToolStripMenuItem.Text = "Open Folder";
             this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.openFolderToolStripMenuItem_Click);
+            // 
+            // m_button_SyncItem
+            // 
+            this.m_button_SyncItem.Enabled = false;
+            this.m_button_SyncItem.Name = "m_button_SyncItem";
+            this.m_button_SyncItem.Size = new System.Drawing.Size(139, 22);
+            this.m_button_SyncItem.Text = "Sync Item";
+            this.m_button_SyncItem.Click += new System.EventHandler(this.syncItemToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -187,6 +240,10 @@
         private System.Windows.Forms.Button m_button_Cancel;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem openFolderToolStripMenuItem;
+        private System.Windows.Forms.ComboBox m_comboBox_Mode;
+        private System.Windows.Forms.Button m_button_ChangeDirectory2;
+        private System.Windows.Forms.TextBox m_textBox_Directory2;
+        private System.Windows.Forms.ToolStripMenuItem m_button_SyncItem;
     }
 }
 
