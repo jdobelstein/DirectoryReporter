@@ -66,6 +66,9 @@ namespace DirectoryReporter
 
         public long Populate()
         {
+            //Activity.CurrentDirectory = null;
+            //Activity.Cancel = false;
+
             FilesSize = GetDirectorySize(Path);
             TotalSize = FilesSize;
 

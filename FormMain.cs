@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using Delimon.Win32.IO;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -30,18 +30,54 @@ namespace DirectoryReporter
 
         private void UpdateForm()
         {
+            m_textBox_Directory2.Visible = true;
+            m_button_ChangeDirectory2.Visible = true;
+            m_button_SyncItem.Visible = true;
+
+            m_textBox_Directory2.Enabled = false;
+            m_button_ChangeDirectory2.Enabled = false;
+            m_button_SyncItem.Enabled = false;
+
+            m_findLabel.Visible = false;
+            m_findNameText.Visible = false;
+            m_replaceWithLabel.Visible = false;
+            m_replaceWithText.Visible = false;
+
             switch (m_comboBox_Mode.Text)
             {
                 case "Size Report":
-                    m_textBox_Directory2.Enabled = false;
-                    m_button_ChangeDirectory2.Enabled = false;
-                    m_button_SyncItem.Enabled = false;
                     break;
 
                 case "Differences":
                     m_textBox_Directory2.Enabled = true;
                     m_button_ChangeDirectory2.Enabled = true;
                     m_button_SyncItem.Enabled = true;
+                    m_DirectoryReportText.Visible = false;
+                    break;
+
+                case "Rename Files":
+                    m_textBox_Directory2.Visible = false;
+                    m_button_ChangeDirectory2.Visible = false;
+                    m_button_SyncItem.Visible = false;
+                    m_DirectoryReportText.Visible = false;
+
+                    m_findLabel.Visible = true;
+                    m_findNameText.Visible = true;
+                    m_replaceWithLabel.Visible = true;
+                    m_replaceWithText.Visible = true;
+                    break;
+
+                case "Folder List":
+                    m_textBox_Directory2.Visible = false;
+                    m_button_ChangeDirectory2.Visible = false;
+                    m_button_SyncItem.Visible = false;
+                    m_DirectoryReportText.Visible = true;
+
+                    m_findLabel.Visible = false;
+                    m_findNameText.Visible = false;
+                    m_replaceWithLabel.Visible = false;
+                    m_replaceWithText.Visible = false;
+                    m_textBox_Depth.Text = "1";
                     break;
             }
         }
@@ -98,12 +134,18 @@ namespace DirectoryReporter
                 case "Differences":
                     PopulateDifferencesInfo(m_textBox_Directory.Text, m_textBox_Directory2.Text);
                     break;
-            }
 
+                case "Rename Files":
+                    RenameFiles(m_textBox_Directory.Text, m_findNameText.Text, m_replaceWithText.Text);
+                    break;
+
+                case "Folder List":
+                    PopulateFolderList(m_textBox_Directory.Text);
+                    break;
+            }
 
             m_button_Start.Visible = true;
             m_button_Cancel.Visible = false;
-
         }
 
         private void m_button_Cancel_Click(object sender, EventArgs e)
@@ -140,6 +182,8 @@ namespace DirectoryReporter
                 UpdateTree(int.Parse(m_textBox_Depth.Text));
 
             this.Text = "Directory Reporter - ";
+
+
         }
 
         private void PopulateDifferencesInfo(string directory1, string directory2)
@@ -185,6 +229,76 @@ namespace DirectoryReporter
             m_DirectoryInfo.Populate();
 
             m_bBusy = false;
+        }
+
+        private void RenameFiles(string path, string findName, string replaceName)
+        {
+            var files = Directory.GetFiles(path, $"*{findName}*.*");
+
+            foreach (var name in files)
+            {
+                var newName = Path.GetFileName(name).Replace(findName, replaceName);
+
+                try
+                {
+                    Directory.Move(name, Path.Combine(path, newName));
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+
+            foreach (var subDirectory in Directory.GetDirectories(path))
+            {
+                var dirName = Path.GetFileName(subDirectory);
+                if (dirName.StartsWith("$") || dirName.ToLower() == "config" || dirName.ToLower() == "packages" || dirName.StartsWith("."))
+                {
+                    continue;
+                }
+                
+                if (dirName.Contains(findName))
+                {
+                    var newName = dirName.Replace(findName, replaceName);
+
+                    try
+                    {
+                        Directory.Move(Path.Combine(path, dirName), Path.Combine(path,newName));
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+
+                    RenameFiles(Path.Combine(path, newName), findName, replaceName);
+                }
+            }
+        }
+
+        private void PopulateFolderList(string folder)
+        {
+            m_DirectoryReportText.Text = string.Empty;
+
+            var directories = Directory.GetDirectories(folder);
+
+            if (!directories.Any())
+            {
+                return;
+            }
+
+            var dirList = new List<string>();
+
+            foreach (var directory in directories)
+            {
+                dirList.Add(Path.GetFileName(directory));
+            }
+
+            foreach(var name in dirList.OrderBy(x => x))
+            {
+                m_DirectoryReportText.AppendText($"{name}{Environment.NewLine}");
+            }
+
+            Clipboard.SetText(m_DirectoryReportText.Text);
         }
 
         private void DoPopulateDirectoryDiffInfo()

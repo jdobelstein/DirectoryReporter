@@ -30,6 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.m_replaceWithText = new System.Windows.Forms.TextBox();
+            this.m_replaceWithLabel = new System.Windows.Forms.Label();
+            this.m_findNameText = new System.Windows.Forms.TextBox();
+            this.m_findLabel = new System.Windows.Forms.Label();
             this.m_comboBox_Mode = new System.Windows.Forms.ComboBox();
             this.m_button_ChangeDirectory2 = new System.Windows.Forms.Button();
             this.m_textBox_Directory2 = new System.Windows.Forms.TextBox();
@@ -43,6 +47,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_button_SyncItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.m_DirectoryReportText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -61,6 +66,10 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.m_replaceWithText);
+            this.splitContainer1.Panel1.Controls.Add(this.m_replaceWithLabel);
+            this.splitContainer1.Panel1.Controls.Add(this.m_findNameText);
+            this.splitContainer1.Panel1.Controls.Add(this.m_findLabel);
             this.splitContainer1.Panel1.Controls.Add(this.m_comboBox_Mode);
             this.splitContainer1.Panel1.Controls.Add(this.m_button_ChangeDirectory2);
             this.splitContainer1.Panel1.Controls.Add(this.m_textBox_Directory2);
@@ -73,10 +82,47 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.m_DirectoryReportText);
             this.splitContainer1.Panel2.Controls.Add(this.m_DirectoryReport);
             this.splitContainer1.Size = new System.Drawing.Size(828, 644);
             this.splitContainer1.SplitterDistance = 63;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // m_replaceWithText
+            // 
+            this.m_replaceWithText.Location = new System.Drawing.Point(433, 38);
+            this.m_replaceWithText.Name = "m_replaceWithText";
+            this.m_replaceWithText.Size = new System.Drawing.Size(205, 20);
+            this.m_replaceWithText.TabIndex = 12;
+            this.m_replaceWithText.Visible = false;
+            // 
+            // m_replaceWithLabel
+            // 
+            this.m_replaceWithLabel.AutoSize = true;
+            this.m_replaceWithLabel.Location = new System.Drawing.Point(352, 38);
+            this.m_replaceWithLabel.Name = "m_replaceWithLabel";
+            this.m_replaceWithLabel.Size = new System.Drawing.Size(75, 13);
+            this.m_replaceWithLabel.TabIndex = 11;
+            this.m_replaceWithLabel.Text = "Replace With:";
+            this.m_replaceWithLabel.Visible = false;
+            // 
+            // m_findNameText
+            // 
+            this.m_findNameText.Location = new System.Drawing.Point(157, 38);
+            this.m_findNameText.Name = "m_findNameText";
+            this.m_findNameText.Size = new System.Drawing.Size(189, 20);
+            this.m_findNameText.TabIndex = 10;
+            this.m_findNameText.Visible = false;
+            // 
+            // m_findLabel
+            // 
+            this.m_findLabel.AutoSize = true;
+            this.m_findLabel.Location = new System.Drawing.Point(90, 37);
+            this.m_findLabel.Name = "m_findLabel";
+            this.m_findLabel.Size = new System.Drawing.Size(61, 13);
+            this.m_findLabel.TabIndex = 9;
+            this.m_findLabel.Text = "Find Name:";
+            this.m_findLabel.Visible = false;
             // 
             // m_comboBox_Mode
             // 
@@ -84,7 +130,9 @@
             this.m_comboBox_Mode.FormattingEnabled = true;
             this.m_comboBox_Mode.Items.AddRange(new object[] {
             "Size Report",
-            "Differences"});
+            "Differences",
+            "Rename Files",
+            "Folder List"});
             this.m_comboBox_Mode.Location = new System.Drawing.Point(695, 37);
             this.m_comboBox_Mode.Name = "m_comboBox_Mode";
             this.m_comboBox_Mode.Size = new System.Drawing.Size(121, 21);
@@ -157,7 +205,7 @@
             // 
             // m_button_Start
             // 
-            this.m_button_Start.Location = new System.Drawing.Point(12, 10);
+            this.m_button_Start.Location = new System.Drawing.Point(12, 9);
             this.m_button_Start.Name = "m_button_Start";
             this.m_button_Start.Size = new System.Drawing.Size(75, 23);
             this.m_button_Start.TabIndex = 0;
@@ -209,6 +257,18 @@
             this.m_button_SyncItem.Text = "Sync Item";
             this.m_button_SyncItem.Click += new System.EventHandler(this.syncItemToolStripMenuItem_Click);
             // 
+            // m_DirectoryReportText
+            // 
+            this.m_DirectoryReportText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.m_DirectoryReportText.Location = new System.Drawing.Point(0, 0);
+            this.m_DirectoryReportText.Multiline = true;
+            this.m_DirectoryReportText.Name = "m_DirectoryReportText";
+            this.m_DirectoryReportText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.m_DirectoryReportText.Size = new System.Drawing.Size(828, 577);
+            this.m_DirectoryReportText.TabIndex = 1;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -221,6 +281,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
@@ -244,6 +305,11 @@
         private System.Windows.Forms.Button m_button_ChangeDirectory2;
         private System.Windows.Forms.TextBox m_textBox_Directory2;
         private System.Windows.Forms.ToolStripMenuItem m_button_SyncItem;
+        private System.Windows.Forms.TextBox m_replaceWithText;
+        private System.Windows.Forms.Label m_replaceWithLabel;
+        private System.Windows.Forms.TextBox m_findNameText;
+        private System.Windows.Forms.Label m_findLabel;
+        private System.Windows.Forms.TextBox m_DirectoryReportText;
     }
 }
 

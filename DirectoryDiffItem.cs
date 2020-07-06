@@ -68,7 +68,7 @@ namespace DirectoryReporter
             get
             {
                 var label = Type == DiffType.FileMissing || Type == DiffType.FolderMissing ? " (+)" : "";
-                return $"{System.IO.Path.GetFileName(Path)}{label}";
+                return $"{Delimon.Win32.IO.Path.GetFileName(Path)}{label}";
             }
         }
 
@@ -98,6 +98,10 @@ namespace DirectoryReporter
 
         public long Populate()
         {
+            Activity.CurrentDirectory = null;
+            Activity.DiffCount = 0;
+            Activity.Cancel = false;
+
             DiffCount = 0;
 
             if (!Directory.Exists(Path2))
@@ -108,10 +112,15 @@ namespace DirectoryReporter
             }
 
             var path1Files = Directory.GetFiles(Path1, "*.*");
-            
+
+            var extensionFilter = new string[] { ".log", ".pdb" }.ToList();
+
             foreach (var path1File in path1Files)
             {
                 var path2File = Utils.TranslatePath(path1File, Path2);
+
+                if (extensionFilter.IndexOf(Delimon.Win32.IO.Path.GetExtension(path1File)) >= 0)
+                    continue;
 
                 try
                 {
@@ -144,8 +153,8 @@ namespace DirectoryReporter
 
             foreach (var subDirectory1 in subDirectories)
             {
-                var dirName = System.IO.Path.GetFileName(subDirectory1);
-                var subDirectory2 = System.IO.Path.Combine(Path2, dirName);
+                var dirName = Delimon.Win32.IO.Path.GetFileName(subDirectory1);
+                var subDirectory2 = Delimon.Win32.IO.Path.Combine(Path2, dirName);
 
                 if (dirName.StartsWith("$") || dirName.StartsWith(".git") || dirName.StartsWith(".cache") || dirName == "Debug" || dirName == "Release")
                 {
