@@ -42,6 +42,7 @@ namespace DirectoryReporter
             m_findNameText.Visible = false;
             m_replaceWithLabel.Visible = false;
             m_replaceWithText.Visible = false;
+            m_DirectoryReportText.Visible = false;
 
             switch (m_comboBox_Mode.Text)
             {
@@ -52,7 +53,6 @@ namespace DirectoryReporter
                     m_textBox_Directory2.Enabled = true;
                     m_button_ChangeDirectory2.Enabled = true;
                     m_button_SyncItem.Enabled = true;
-                    m_DirectoryReportText.Visible = false;
                     break;
 
                 case "Rename Files":
@@ -335,6 +335,10 @@ namespace DirectoryReporter
 
             foreach (var child in directoryInfo.Children)
             {
+                if (DirectorySizeItem.Activity.Cancel)
+                {
+                    break;
+                }
                 var dirNode = treeNode.Nodes.Add(child.PathValue, child.Info);
                 dirNode.Tag = child;
                 dirNode.ForeColor = child.Color;

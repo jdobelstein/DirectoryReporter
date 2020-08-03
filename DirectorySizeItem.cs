@@ -64,6 +64,11 @@ namespace DirectoryReporter
 
         public long Populate()
         {
+            if (Activity.Cancel == true)
+            {
+                return 0;
+            }
+
             //Activity.CurrentDirectory = null;
             //Activity.Cancel = false;
 
