@@ -219,7 +219,7 @@ namespace DirectoryReporter
 
         private void DoPopulateDirectoryInfo()
         {
-            if (!Directory.Exists(m_DirectoryInfo.Path))
+            if (!Directory.Exists(m_DirectoryInfo.PathValue))
             {
                 return;
             }
@@ -303,7 +303,7 @@ namespace DirectoryReporter
 
         private void DoPopulateDirectoryDiffInfo()
         {
-            if (!Directory.Exists(m_DirectoryInfo.Path))
+            if (!Directory.Exists(m_DirectoryInfo.PathValue))
             {
                 return;
             }
@@ -320,7 +320,7 @@ namespace DirectoryReporter
         {
             m_DirectoryReport.Nodes.Clear();
 
-            var rootNode = m_DirectoryReport.Nodes.Add(m_DirectoryInfo.Path, m_DirectoryInfo.Info);
+            var rootNode = m_DirectoryReport.Nodes.Add(m_DirectoryInfo.PathValue, m_DirectoryInfo.Info);
             rootNode.Tag = m_DirectoryInfo;
             
             PopulateTreeNode(rootNode, m_DirectoryInfo, depth);
@@ -335,7 +335,7 @@ namespace DirectoryReporter
 
             foreach (var child in directoryInfo.Children)
             {
-                var dirNode = treeNode.Nodes.Add(child.Path, child.Info);
+                var dirNode = treeNode.Nodes.Add(child.PathValue, child.Info);
                 dirNode.Tag = child;
                 dirNode.ForeColor = child.Color;
 
@@ -368,7 +368,7 @@ namespace DirectoryReporter
             var dirInfo = m_DirectoryReport.SelectedNode.Tag as IDirectoryInfo;
 
             if (dirInfo != null && dirInfo.IsDirectory)
-                OpenFolder(dirInfo.Path);
+                OpenFolder(dirInfo.PathValue);
         }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -392,15 +392,15 @@ namespace DirectoryReporter
         {
             var dirInfo = m_DirectoryReport.SelectedNode.Tag as IDirectoryInfo;
 
-            var obj2 = dirInfo.Path.Replace(m_textBox_Directory.Text, m_textBox_Directory2.Text);
+            var obj2 = dirInfo.PathValue.Replace(m_textBox_Directory.Text, m_textBox_Directory2.Text);
 
             if (dirInfo != null && dirInfo.IsDirectory)
             {
-                Utils.DirectoryCopy(dirInfo.Path, obj2, true);
+                Utils.DirectoryCopy(dirInfo.PathValue, obj2, true);
             }
             else
             {
-                File.Copy(dirInfo.Path, obj2, true);
+                File.Copy(dirInfo.PathValue, obj2, true);
             }
         }
     }

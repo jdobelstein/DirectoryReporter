@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Delimon.Win32.IO;
-using System.Linq;
-using System.Text;
+using System.IO;
 
 namespace DirectoryReporter
 {
     public interface IDirectoryInfo
     {
-        string Path { get; }
+        string PathValue { get; }
         string Info { get; }
         Color Color { get; }
         bool IsDirectory { get; }
@@ -19,7 +17,7 @@ namespace DirectoryReporter
 
     public class DirectorySizeItem : IDirectoryInfo
     {
-        public string Path { get; private set; }
+        public string PathValue { get; private set; }
         public long FilesSize { get; private set; }
         public long TotalSize { get; private set; }
         public List<IDirectoryInfo> Children { get; private set; }
@@ -36,7 +34,7 @@ namespace DirectoryReporter
         {
             get
             {
-                return string.Format("{0}({1})", System.IO.Path.GetFileName(Path).PadRight(20), TotalSize.ToFileSize());
+                return string.Format("{0}({1})", System.IO.Path.GetFileName(PathValue).PadRight(20), TotalSize.ToFileSize());
             }
         }
 
@@ -56,7 +54,7 @@ namespace DirectoryReporter
 
         public DirectorySizeItem(string path)
         {
-            Path = path;
+            PathValue = path;
 
             FilesSize = 0;
             TotalSize = 0;
@@ -69,10 +67,10 @@ namespace DirectoryReporter
             //Activity.CurrentDirectory = null;
             //Activity.Cancel = false;
 
-            FilesSize = GetDirectorySize(Path);
+            FilesSize = GetDirectorySize(PathValue);
             TotalSize = FilesSize;
 
-            foreach (var subDirectory in Directory.GetDirectories(Path))
+            foreach (var subDirectory in Directory.GetDirectories(PathValue))
             {
                 var dirName = System.IO.Path.GetFileName(subDirectory);
                 if (dirName.StartsWith("$"))

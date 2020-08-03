@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Delimon.Win32.IO;
 using System.Linq;
-using System.Text;
+using System.IO;
 
 namespace DirectoryReporter
 {
@@ -17,7 +16,7 @@ namespace DirectoryReporter
 
     public class Difference
     {
-        public string Path { get; set; }
+        public string PathValue { get; set; }
         public DiffType Type { get; set; }
     }
 
@@ -55,7 +54,7 @@ namespace DirectoryReporter
             get { return Path1.Substring(Path1.LastIndexOf("\\") + 1); }
         }
 
-        public string Path
+        public string PathValue
         {
             get
             {
@@ -68,7 +67,7 @@ namespace DirectoryReporter
             get
             {
                 var label = Type == DiffType.FileMissing || Type == DiffType.FolderMissing ? " (+)" : "";
-                return $"{Delimon.Win32.IO.Path.GetFileName(Path)}{label}";
+                return $"{Path.GetFileName(PathValue)}{label}";
             }
         }
 
@@ -119,7 +118,7 @@ namespace DirectoryReporter
             {
                 var path2File = Utils.TranslatePath(path1File, Path2);
 
-                if (extensionFilter.IndexOf(Delimon.Win32.IO.Path.GetExtension(path1File)) >= 0)
+                if (extensionFilter.IndexOf(Path.GetExtension(path1File)) >= 0)
                     continue;
 
                 try
@@ -153,8 +152,8 @@ namespace DirectoryReporter
 
             foreach (var subDirectory1 in subDirectories)
             {
-                var dirName = Delimon.Win32.IO.Path.GetFileName(subDirectory1);
-                var subDirectory2 = Delimon.Win32.IO.Path.Combine(Path2, dirName);
+                var dirName = Path.GetFileName(subDirectory1);
+                var subDirectory2 = Path.Combine(Path2, dirName);
 
                 if (dirName.StartsWith("$") || dirName.StartsWith(".git") || dirName.StartsWith(".cache") || dirName == "Debug" || dirName == "Release")
                 {
