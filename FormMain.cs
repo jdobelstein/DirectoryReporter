@@ -233,45 +233,54 @@ namespace DirectoryReporter
 
         private void RenameFiles(string path, string findName, string replaceName)
         {
-            var files = Directory.GetFiles(path, $"*{findName}*.*");
-
-            foreach (var name in files)
+            try
             {
-                var newName = Path.GetFileName(name).Replace(findName, replaceName);
+                var files = Directory.GetFiles(path, $"*{findName}*.*");
 
-                try
+                foreach (var name in files)
                 {
-                    Directory.Move(name, Path.Combine(path, newName));
-                }
-                catch (Exception e)
-                {
-
-                }
-            }
-
-            foreach (var subDirectory in Directory.GetDirectories(path))
-            {
-                var dirName = Path.GetFileName(subDirectory);
-                if (dirName.StartsWith("$") || dirName.ToLower() == "config" || dirName.ToLower() == "packages" || dirName.StartsWith("."))
-                {
-                    continue;
-                }
-                
-                if (dirName.Contains(findName))
-                {
-                    var newName = dirName.Replace(findName, replaceName);
+                    var newName = Path.GetFileName(name).Replace(findName, replaceName);
 
                     try
                     {
-                        Directory.Move(Path.Combine(path, dirName), Path.Combine(path,newName));
+                        Directory.Move(name, Path.Combine(path, newName));
                     }
                     catch (Exception e)
                     {
 
                     }
-
-                    RenameFiles(Path.Combine(path, newName), findName, replaceName);
                 }
+
+                foreach (var subDirectory in Directory.GetDirectories(path))
+                {
+                    var dirName = Path.GetFileName(subDirectory);
+                    if (dirName.StartsWith("$") || dirName.ToLower() == "config" || dirName.ToLower() == "packages" || dirName.StartsWith("."))
+                    {
+                        continue;
+                    }
+                
+                    if (dirName.Contains(findName))
+                    {
+                        var newName = dirName.Replace(findName, replaceName);
+
+                        try
+                        {
+                            Directory.Move(Path.Combine(path, dirName), Path.Combine(path,newName));
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+
+                        RenameFiles(Path.Combine(path, newName), findName, replaceName);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError($"RenameFiles Exception getting directory: {path}, ex: {ex.Message}");
+                return;
             }
         }
 

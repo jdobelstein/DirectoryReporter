@@ -857,13 +857,21 @@ namespace DirectoryReporter
             var split = path.Split('\\');
             int i = unc ? 6 : 4;
             var list = new List<string>();
-            var txt = "";
+            
+            var sb = new StringBuilder();
 
             for (int a = 0; a < i; a++)
             {
-                if (a > 0) txt += "\\";
-                txt += split[a];
+                if (a > 0)
+                {
+                    sb.Append('\\');
+                }
+
+                sb.Append(split[a]);
             }
+
+            var txt = sb.ToString();
+
             for (; i < split.Length; i++)
             {
                 txt = Combine(txt, split[i]);
