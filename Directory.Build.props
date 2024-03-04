@@ -1,0 +1,38 @@
+<Project>
+  <PropertyGroup>
+	<!--
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodeAnalysysMinimumRequired.ruleset</CodeAnalysisRuleSet>
+	-->
+    <LangVersion>latest</LangVersion>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+    <RunAnalyzersDuringBuild Condition=" '$(DisableAnalyzers)' == 'True' ">False</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis Condition=" '$(DisableAnalyzers)' == 'True' ">False</RunAnalyzersDuringLiveAnalysis>
+    <EnableNETAnalyzers Condition=" '$(DisableAnalyzers)' == 'True' ">False</EnableNETAnalyzers>
+    <ResolveComReferenceSilent>true</ResolveComReferenceSilent>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+    <DebugType>Portable</DebugType>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <UseRazorBuildServer>false</UseRazorBuildServer>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <RazorCompileOnPublish>false</RazorCompileOnPublish>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <!--
+    <None Include="$(MSBuildThisFileDirectory)\src\Shared\CodeAnalysysMinimumRequired.ruleset">
+      <Link>CodeAnalysysMinimumRequired.ruleset</Link>
+    </None>
+	-->
+  </ItemGroup>
+  <ItemGroup>
+    <SonarQubeSetting Include="sonar.coverage.exclusions"> <Value>**/*.xml,packages/**/*,**/obj/**/*,**/*.resx,**/*.dll,**/*.exe,**/Tests/**/*,Tests/**/*,**/*Test.cs,**/*Test.cs,**/obj/**/*,**/generated/**/*,**/*.Designer.cs,**/SharedAssemblyInfo.cs,**/Program.cs,**/*.xaml.cs</Value>
+    </SonarQubeSetting>
+    <SonarQubeSetting Include="sonar.exclusions">
+      <Value>**/*.xml,packages/**/*,**/obj/**/*,**/*.resx,**/*.dll,**/*.exe,**/obj/**/*,**/generated/**/*,**/*.Designer.cs,**/AssemblyInfo.cs</Value>
+    </SonarQubeSetting>
+  </ItemGroup>
+</Project>

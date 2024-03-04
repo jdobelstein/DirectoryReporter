@@ -8,18 +8,26 @@ namespace DirectoryReporter
     public interface IDirectoryInfo
     {
         string PathValue { get; }
+
         string Info { get; }
+
         Color Color { get; }
+
         bool IsDirectory { get; }
+
         List<IDirectoryInfo> Children { get; }
+
         long Populate();
     }
 
     public class DirectorySizeItem : IDirectoryInfo
     {
         public string PathValue { get; private set; }
+
         public long FilesSize { get; private set; }
+
         public long TotalSize { get; private set; }
+
         public List<IDirectoryInfo> Children { get; private set; }
 
         public bool IsDirectory
@@ -34,7 +42,7 @@ namespace DirectoryReporter
         {
             get
             {
-                return string.Format("{0}({1})", System.IO.Path.GetFileName(PathValue).PadRight(20), TotalSize.ToFileSize());
+                return string.Format("{0}({1})", System.IO.Path.GetFileName(this.PathValue).PadRight(20), this.TotalSize.ToFileSize());
             }
         }
 
@@ -42,24 +50,25 @@ namespace DirectoryReporter
         {
             get
             {
-                return TotalSize > 1000000000 ? Color.Red : Color.Black;
+                return this.TotalSize > 1000000000 ? Color.Red : Color.Black;
             }
         }
 
         public static class Activity
         {
             public static string CurrentDirectory { get; set; }
+
             public static bool Cancel { get; set; }
         }
 
         public DirectorySizeItem(string path)
         {
-            PathValue = path;
+            this.PathValue = path;
 
-            FilesSize = 0;
-            TotalSize = 0;
+            this.FilesSize = 0;
+            this.TotalSize = 0;
 
-            Children = new List<IDirectoryInfo>();
+            this.Children = new List<IDirectoryInfo>();
         }
 
         public long Populate()
@@ -69,13 +78,12 @@ namespace DirectoryReporter
                 return 0;
             }
 
-            //Activity.CurrentDirectory = null;
-            //Activity.Cancel = false;
+            // Activity.CurrentDirectory = null;
+            // Activity.Cancel = false;
+            this.FilesSize = GetDirectorySize(this.PathValue);
+            this.TotalSize = this.FilesSize;
 
-            FilesSize = GetDirectorySize(PathValue);
-            TotalSize = FilesSize;
-
-            foreach (var subDirectory in Directory.GetDirectories(PathValue))
+            foreach (var subDirectory in Directory.GetDirectories(this.PathValue))
             {
                 var dirName = System.IO.Path.GetFileName(subDirectory);
                 if (dirName.StartsWith("$"))
@@ -85,7 +93,7 @@ namespace DirectoryReporter
 
                 if (Activity.Cancel == true)
                 {
-                    return TotalSize;
+                    return this.TotalSize;
                 }
 
                 Activity.CurrentDirectory = subDirectory;
@@ -95,8 +103,8 @@ namespace DirectoryReporter
                 try
                 {
                     subDirectoryInfo.Populate();
-                    TotalSize += subDirectoryInfo.TotalSize;
-                    Children.Add(subDirectoryInfo);
+                    this.TotalSize += subDirectoryInfo.TotalSize;
+                    this.Children.Add(subDirectoryInfo);
                 }
                 catch (Exception e)
                 {
@@ -104,7 +112,7 @@ namespace DirectoryReporter
                 }
             }
 
-            return TotalSize;
+            return this.TotalSize;
         }
 
         static long GetDirectorySize(string baseDirectory)
@@ -133,7 +141,11 @@ namespace DirectoryReporter
     {
         public object GetFormat(Type formatType)
         {
-            if (formatType == typeof(ICustomFormatter)) return this;
+            if (formatType == typeof(ICustomFormatter))
+            {
+                return this;
+            }
+
             return null;
         }
 
@@ -187,7 +199,11 @@ namespace DirectoryReporter
             }
 
             string precision = format.Substring(2);
-            if (String.IsNullOrEmpty(precision)) precision = "2";
+            if (String.IsNullOrEmpty(precision))
+            {
+                precision = "2";
+            }
+
             return String.Format("{0:N" + precision + "}{1}", size, suffix);
 
         }
@@ -199,6 +215,7 @@ namespace DirectoryReporter
             {
                 return formattableArg.ToString(format, formatProvider);
             }
+
             return arg.ToString();
         }
 

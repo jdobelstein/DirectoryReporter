@@ -21,66 +21,66 @@ namespace DirectoryReporter
 
         public FormMain()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            //m_comboBox_Mode.Text = "Differences";
-
-            UpdateForm();
+            // m_comboBox_Mode.Text = "Differences";
+            this.UpdateForm();
         }
 
         private void UpdateForm()
         {
-            m_textBox_Directory2.Visible = true;
-            m_button_ChangeDirectory2.Visible = true;
-            m_button_SyncItem.Visible = true;
+            this.m_textBox_Directory2.Visible = true;
+            this.m_button_ChangeDirectory2.Visible = true;
+            this.m_button_SyncItem.Visible = true;
 
-            m_textBox_Directory2.Enabled = false;
-            m_button_ChangeDirectory2.Enabled = false;
-            m_button_SyncItem.Enabled = false;
+            this.m_textBox_Directory2.Enabled = false;
+            this.m_button_ChangeDirectory2.Enabled = false;
+            this.m_button_SyncItem.Enabled = false;
 
-            m_findLabel.Visible = false;
-            m_findNameText.Visible = false;
-            m_replaceWithLabel.Visible = false;
-            m_replaceWithText.Visible = false;
-            m_DirectoryReportText.Visible = false;
+            this.m_findLabel.Visible = false;
+            this.m_findNameText.Visible = false;
+            this.m_replaceWithLabel.Visible = false;
+            this.m_replaceWithText.Visible = false;
+            this.m_DirectoryReportText.Visible = false;
 
-            switch (m_comboBox_Mode.Text)
+            switch (this.m_comboBox_Mode.Text)
             {
                 case "Size Report":
                     break;
 
                 case "Differences":
-                    m_textBox_Directory2.Enabled = true;
-                    m_button_ChangeDirectory2.Enabled = true;
-                    m_button_SyncItem.Enabled = true;
+                    this.m_textBox_Directory2.Enabled = true;
+                    this.m_button_ChangeDirectory2.Enabled = true;
+                    this.m_button_SyncItem.Enabled = true;
                     break;
 
                 case "Rename Files":
-                    m_textBox_Directory2.Visible = false;
-                    m_button_ChangeDirectory2.Visible = false;
-                    m_button_SyncItem.Visible = false;
-                    m_DirectoryReportText.Visible = false;
+                    this.m_textBox_Directory2.Visible = false;
+                    this.m_button_ChangeDirectory2.Visible = false;
+                    this.m_button_SyncItem.Visible = false;
+                    this.m_DirectoryReportText.Visible = false;
 
-                    m_findLabel.Visible = true;
-                    m_findNameText.Visible = true;
-                    m_replaceWithLabel.Visible = true;
-                    m_replaceWithText.Visible = true;
+                    this.m_findLabel.Visible = true;
+                    this.m_findNameText.Visible = true;
+                    this.m_replaceWithLabel.Visible = true;
+                    this.m_replaceWithText.Visible = true;
                     break;
 
                 case "Folder List":
-                    m_textBox_Directory2.Visible = false;
-                    m_button_ChangeDirectory2.Visible = false;
-                    m_button_SyncItem.Visible = false;
-                    m_DirectoryReportText.Visible = true;
+                    this.m_textBox_Directory2.Visible = false;
+                    this.m_button_ChangeDirectory2.Visible = false;
+                    this.m_button_SyncItem.Visible = false;
+                    this.m_DirectoryReportText.Visible = true;
 
-                    m_findLabel.Visible = false;
-                    m_findNameText.Visible = false;
-                    m_replaceWithLabel.Visible = false;
-                    m_replaceWithText.Visible = false;
-                    m_textBox_Depth.Text = "1";
+                    this.m_findLabel.Visible = false;
+                    this.m_findNameText.Visible = false;
+                    this.m_replaceWithLabel.Visible = false;
+                    this.m_replaceWithText.Visible = false;
+                    this.m_textBox_Depth.Text = "1";
                     break;
             }
         }
+
         private string PromptForFolder()
         {
             var dirForm = new FolderBrowserDialog();
@@ -96,56 +96,57 @@ namespace DirectoryReporter
 
             return "";
         }
+
         private void m_button_ChangeDirectory_Click(object sender, EventArgs e)
         {
-            m_textBox_Directory.Text = PromptForFolder();
+            this.m_textBox_Directory.Text = this.PromptForFolder();
         }
 
         private void m_button_ChangeDirectory2_Click(object sender, EventArgs e)
         {
-            m_textBox_Directory2.Text = PromptForFolder();
+            this.m_textBox_Directory2.Text = this.PromptForFolder();
         }
 
         private void m_button_Start_Click(object sender, EventArgs e)
         {
-            if (!Directory.Exists(m_textBox_Directory.Text))
+            if (!Directory.Exists(this.m_textBox_Directory.Text))
             {
                 MessageBox.Show("Directory not found", "Error");
                 return;
             }
 
-            if (m_textBox_Directory2.Enabled && !Directory.Exists(m_textBox_Directory2.Text))
+            if (this.m_textBox_Directory2.Enabled && !Directory.Exists(this.m_textBox_Directory2.Text))
             {
                 MessageBox.Show("Directory 2 not found", "Error");
                 return;
             }
 
-            m_button_Start.Visible = false;
-            m_button_Cancel.Visible = true;
+            this.m_button_Start.Visible = false;
+            this.m_button_Cancel.Visible = true;
 
-            m_DirectoryReport.Nodes.Clear();
+            this.m_DirectoryReport.Nodes.Clear();
 
-            switch (m_comboBox_Mode.Text)
+            switch (this.m_comboBox_Mode.Text)
             {
                 case "Size Report":
-                    PopulateDirectoryInfo(m_textBox_Directory.Text);
+                    this.PopulateDirectoryInfo(this.m_textBox_Directory.Text);
                     break;
 
                 case "Differences":
-                    PopulateDifferencesInfo(m_textBox_Directory.Text, m_textBox_Directory2.Text);
+                    this.PopulateDifferencesInfo(this.m_textBox_Directory.Text, this.m_textBox_Directory2.Text);
                     break;
 
                 case "Rename Files":
-                    RenameFiles(m_textBox_Directory.Text, m_findNameText.Text, m_replaceWithText.Text);
+                    this.RenameFiles(this.m_textBox_Directory.Text, this.m_findNameText.Text, this.m_replaceWithText.Text);
                     break;
 
                 case "Folder List":
-                    PopulateFolderList(m_textBox_Directory.Text);
+                    this.PopulateFolderList(this.m_textBox_Directory.Text);
                     break;
             }
 
-            m_button_Start.Visible = true;
-            m_button_Cancel.Visible = false;
+            this.m_button_Start.Visible = true;
+            this.m_button_Cancel.Visible = false;
         }
 
         private void m_button_Cancel_Click(object sender, EventArgs e)
@@ -155,22 +156,22 @@ namespace DirectoryReporter
 
         private void PopulateDirectoryInfo(string rootDirectory)
         {
-            m_DirectoryInfo = new DirectorySizeItem(rootDirectory);
+            this.m_DirectoryInfo = new DirectorySizeItem(rootDirectory);
 
-            var m = new MethodInvoker(DoPopulateDirectoryInfo);
+            var m = new MethodInvoker(this.DoPopulateDirectoryInfo);
 
-            m_bBusy = true;
+            this.m_bBusy = true;
 
             var tag = m.BeginInvoke(null, null);
 
-            while (m_bBusy)
+            while (this.m_bBusy)
             {
                 Application.DoEvents();
                 Thread.Sleep(50);
 
                 this.Text = "Directory Size Reporter - " + DirectorySizeItem.Activity.CurrentDirectory;
 
-                if (m_bClosing)
+                if (this.m_bClosing)
                 {
                     this.Text.Replace("Directory Size Reporter - ", "Directory Reporter - (CLOSING) - ");
                 }
@@ -178,32 +179,33 @@ namespace DirectoryReporter
 
             m.EndInvoke(tag);
 
-            if (!m_bClosing)
-                UpdateTree(int.Parse(m_textBox_Depth.Text));
+            if (!this.m_bClosing)
+            {
+                this.UpdateTree(int.Parse(this.m_textBox_Depth.Text));
+            }
 
             this.Text = "Directory Reporter - ";
-
 
         }
 
         private void PopulateDifferencesInfo(string directory1, string directory2)
         {
-            m_DirectoryInfo = new DirectoryDiffItem(directory1, directory2);
+            this.m_DirectoryInfo = new DirectoryDiffItem(directory1, directory2);
 
-            var m = new MethodInvoker(DoPopulateDirectoryDiffInfo);
+            var m = new MethodInvoker(this.DoPopulateDirectoryDiffInfo);
 
-            m_bBusy = true;
+            this.m_bBusy = true;
 
             var tag = m.BeginInvoke(null, null);
 
-            while (m_bBusy)
+            while (this.m_bBusy)
             {
                 Application.DoEvents();
                 Thread.Sleep(50);
 
                 this.Text = $"Directory Differences - ({DirectoryDiffItem.Activity.DiffCount}) - " + DirectoryDiffItem.Activity.CurrentDirectory;
 
-                if (m_bClosing)
+                if (this.m_bClosing)
                 {
                     this.Text.Replace("Directory Differences - ", "Directory Differences - (CLOSING) - ");
                 }
@@ -211,24 +213,26 @@ namespace DirectoryReporter
 
             m.EndInvoke(tag);
 
-            if (!m_bClosing)
-                UpdateTree(int.Parse(m_textBox_Depth.Text));
+            if (!this.m_bClosing)
+            {
+                this.UpdateTree(int.Parse(this.m_textBox_Depth.Text));
+            }
 
             this.Text = "Directory Differences";
         }
 
         private void DoPopulateDirectoryInfo()
         {
-            if (!Directory.Exists(m_DirectoryInfo.PathValue))
+            if (!Directory.Exists(this.m_DirectoryInfo.PathValue))
             {
                 return;
             }
 
             DirectorySizeItem.Activity.Cancel = false;
 
-            m_DirectoryInfo.Populate();
+            this.m_DirectoryInfo.Populate();
 
-            m_bBusy = false;
+            this.m_bBusy = false;
         }
 
         private void RenameFiles(string path, string findName, string replaceName)
@@ -258,21 +262,21 @@ namespace DirectoryReporter
                     {
                         continue;
                     }
-                
+
                     if (dirName.Contains(findName))
                     {
                         var newName = dirName.Replace(findName, replaceName);
 
                         try
                         {
-                            Directory.Move(Path.Combine(path, dirName), Path.Combine(path,newName));
+                            Directory.Move(Path.Combine(path, dirName), Path.Combine(path, newName));
                         }
                         catch (Exception e)
                         {
 
                         }
 
-                        RenameFiles(Path.Combine(path, newName), findName, replaceName);
+                        this.RenameFiles(Path.Combine(path, newName), findName, replaceName);
                     }
                 }
 
@@ -286,7 +290,7 @@ namespace DirectoryReporter
 
         private void PopulateFolderList(string folder)
         {
-            m_DirectoryReportText.Text = string.Empty;
+            this.m_DirectoryReportText.Text = string.Empty;
 
             var directories = Directory.GetDirectories(folder);
 
@@ -302,45 +306,46 @@ namespace DirectoryReporter
                 dirList.Add(Path.GetFileName(directory));
             }
 
-            foreach(var name in dirList.OrderBy(x => x))
+            foreach (var name in dirList.OrderBy(x => x))
             {
-                m_DirectoryReportText.AppendText($"{name}{Environment.NewLine}");
+                this.m_DirectoryReportText.AppendText($"{name}{Environment.NewLine}");
             }
 
-            Clipboard.SetText(m_DirectoryReportText.Text);
+            Clipboard.SetText(this.m_DirectoryReportText.Text);
         }
 
         private void DoPopulateDirectoryDiffInfo()
         {
-            if (!Directory.Exists(m_DirectoryInfo.PathValue))
+            if (!Directory.Exists(this.m_DirectoryInfo.PathValue))
             {
                 return;
             }
 
             DirectoryDiffItem.Activity.Cancel = false;
 
-            m_DirectoryInfo.Populate();
+            this.m_DirectoryInfo.Populate();
 
-            m_bBusy = false;
+            this.m_bBusy = false;
         }
-
 
         private void UpdateTree(int depth)
         {
-            m_DirectoryReport.Nodes.Clear();
+            this.m_DirectoryReport.Nodes.Clear();
 
-            var rootNode = m_DirectoryReport.Nodes.Add(m_DirectoryInfo.PathValue, m_DirectoryInfo.Info);
-            rootNode.Tag = m_DirectoryInfo;
-            
-            PopulateTreeNode(rootNode, m_DirectoryInfo, depth);
+            var rootNode = this.m_DirectoryReport.Nodes.Add(this.m_DirectoryInfo.PathValue, this.m_DirectoryInfo.Info);
+            rootNode.Tag = this.m_DirectoryInfo;
+
+            this.PopulateTreeNode(rootNode, this.m_DirectoryInfo, depth);
 
             rootNode.Expand();
         }
 
         private void PopulateTreeNode(TreeNode treeNode, IDirectoryInfo directoryInfo, int depth)
         {
-            if (directoryInfo == null || directoryInfo.Children ==  null)
+            if (directoryInfo == null || directoryInfo.Children == null)
+            {
                 return;
+            }
 
             foreach (var child in directoryInfo.Children)
             {
@@ -348,6 +353,7 @@ namespace DirectoryReporter
                 {
                     break;
                 }
+
                 var dirNode = treeNode.Nodes.Add(child.PathValue, child.Info);
                 dirNode.Tag = child;
                 dirNode.ForeColor = child.Color;
@@ -360,10 +366,12 @@ namespace DirectoryReporter
                 */
                 if (depth > 0)
                 {
-                    PopulateTreeNode(dirNode, child, depth - 1);
+                    this.PopulateTreeNode(dirNode, child, depth - 1);
 
-                    if (m_comboBox_Mode.Text != "Size Report")
+                    if (this.m_comboBox_Mode.Text != "Size Report")
+                    {
                         dirNode.Expand();
+                    }
                 }
             }
         }
@@ -378,17 +386,19 @@ namespace DirectoryReporter
 
         private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dirInfo = m_DirectoryReport.SelectedNode.Tag as IDirectoryInfo;
+            var dirInfo = this.m_DirectoryReport.SelectedNode.Tag as IDirectoryInfo;
 
             if (dirInfo != null && dirInfo.IsDirectory)
+            {
                 OpenFolder(dirInfo.PathValue);
+            }
         }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            m_bClosing = true;
+            this.m_bClosing = true;
             DirectorySizeItem.Activity.Cancel = true;
-            while (m_bBusy)
+            while (this.m_bBusy)
             {
                 Application.DoEvents();
                 Thread.Sleep(50);
@@ -398,14 +408,14 @@ namespace DirectoryReporter
 
         private void m_comboBox_Mode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateForm();
+            this.UpdateForm();
         }
 
         private void syncItemToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dirInfo = m_DirectoryReport.SelectedNode.Tag as IDirectoryInfo;
+            var dirInfo = this.m_DirectoryReport.SelectedNode.Tag as IDirectoryInfo;
 
-            var obj2 = dirInfo.PathValue.Replace(m_textBox_Directory.Text, m_textBox_Directory2.Text);
+            var obj2 = dirInfo.PathValue.Replace(this.m_textBox_Directory.Text, this.m_textBox_Directory2.Text);
 
             if (dirInfo != null && dirInfo.IsDirectory)
             {

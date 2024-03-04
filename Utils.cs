@@ -21,7 +21,9 @@ namespace DirectoryReporter
             while (true)
             {
                 if (s1Pos == 0 || s2Pos == 0 || s1[s1Pos] != s2[s2Pos])
+                {
                     break;
+                }
 
                 s1Pos--; s2Pos--;
             }
@@ -106,8 +108,6 @@ namespace DirectoryReporter
                                                 FILE_READ_EA |
                                                 SYNCHRONIZE;
 
-
-
         internal const long READ_CONTROL = 0x00020000L;
         internal const long STANDARD_RIGHTS_READ = READ_CONTROL;
         internal const long STANDARD_RIGHTS_WRITE = READ_CONTROL;
@@ -128,10 +128,10 @@ namespace DirectoryReporter
             public FILETIME ftCreationTime;
             public FILETIME ftLastAccessTime;
             public FILETIME ftLastWriteTime;
-            public uint nFileSizeHigh; //changed all to uint, otherwise you run into unexpected overflow
-            public uint nFileSizeLow;  //|
-            public uint dwReserved0;   //|
-            public uint dwReserved1;   //v
+            public uint nFileSizeHigh; // changed all to uint, otherwise you run into unexpected overflow
+            public uint nFileSizeLow;  // |
+            public uint dwReserved0;   // |
+            public uint dwReserved1;   // v
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = MAX_PATH)]
             public string cFileName;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = MAX_ALTERNATE)]
@@ -152,17 +152,14 @@ namespace DirectoryReporter
         public enum GET_FILEEX_INFO_LEVELS
         {
             GetFileExInfoStandard,
-            GetFileExMaxInfoLevel
+            GetFileExMaxInfoLevel,
         }
-
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern SafeFileHandle CreateFile(string lpFileName, int dwDesiredAccess, int dwShareMode, IntPtr lpSecurityAttributes, int dwCreationDisposition, int dwFlagsAndAttributes, IntPtr hTemplateFile);
 
-
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool CopyFileW(string lpExistingFileName, string lpNewFileName, bool bFailIfExists);
-
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern int GetFileAttributesW(string lpFileName);
@@ -176,44 +173,37 @@ namespace DirectoryReporter
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool MoveFileW(string lpExistingFileName, string lpNewFileName);
 
-
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool SetFileTime(SafeFileHandle hFile, ref long lpCreationTime, ref long lpLastAccessTime, ref long lpLastWriteTime);
-
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool GetFileTime(SafeFileHandle hFile, ref long lpCreationTime, ref long lpLastAccessTime, ref long lpLastWriteTime);
 
-
         [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern IntPtr FindFirstFile(string lpFileName, out WIN32_FIND_DATA lpFindFileData);
-
 
         [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool FindNextFile(IntPtr hFindFile, out WIN32_FIND_DATA lpFindFileData);
 
-
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool FindClose(IntPtr hFindFile);
-
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool RemoveDirectory(string path);
 
-
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool CreateDirectory(string lpPathName, IntPtr lpSecurityAttributes);
-
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern int SetFileAttributesW(string lpFileName, int fileAttributes);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
 
-        internal static extern int GetLongPathName([MarshalAs(UnmanagedType.LPTStr)] string path, [MarshalAs(UnmanagedType.LPTStr)]StringBuilder longPath, int longPathLength);
+        internal static extern int GetLongPathName([MarshalAs(UnmanagedType.LPTStr)] string path, [MarshalAs(UnmanagedType.LPTStr)] StringBuilder longPath, int longPathLength);
+
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        public static extern int GetShortPathName([MarshalAs(UnmanagedType.LPTStr)]string path,[MarshalAs(UnmanagedType.LPTStr)]StringBuilder shortPath, int shortPathLength);
-        
+        public static extern int GetShortPathName([MarshalAs(UnmanagedType.LPTStr)] string path, [MarshalAs(UnmanagedType.LPTStr)] StringBuilder shortPath, int shortPathLength);
+
     }
 
     public static class LongFile
@@ -230,7 +220,11 @@ namespace DirectoryReporter
 
         public static bool Exists(string path)
         {
-            if (path.Length < MAX_PATH) return System.IO.File.Exists(path);
+            if (path.Length < MAX_PATH)
+            {
+                return System.IO.File.Exists(path);
+            }
+
             var attr = NativeMethods.GetFileAttributesW(GetWin32LongPath(path));
             return (attr != NativeMethods.INVALID_FILE_ATTRIBUTES && ((attr & NativeMethods.FILE_ATTRIBUTE_ARCHIVE) == NativeMethods.FILE_ATTRIBUTE_ARCHIVE));
         }
@@ -243,10 +237,9 @@ namespace DirectoryReporter
                 return fileInfo.Length;
             }
 
-            //return NativeMethods.fso.GetFile(path).Size;
-            
-            // Check path here
+            // return NativeMethods.fso.GetFile(path).Size;
 
+            // Check path here
             NativeMethods.WIN32_FILE_ATTRIBUTE_DATA fileData;
 
             // Append special suffix \\?\ to allow path lengths up to 32767
@@ -257,9 +250,10 @@ namespace DirectoryReporter
             {
                 throw new Win32Exception();
             }
+
             return (long)(((ulong)fileData.nFileSizeHigh << 32) +
                            (ulong)fileData.nFileSizeLow);
-                           
+
         }
 
         public static void Delete(string path)
@@ -268,7 +262,10 @@ namespace DirectoryReporter
             else
             {
                 bool ok = NativeMethods.DeleteFileW(GetWin32LongPath(path));
-                if (!ok) ThrowWin32Exception();
+                if (!ok)
+                {
+                    ThrowWin32Exception();
+                }
             }
         }
 
@@ -346,7 +343,10 @@ namespace DirectoryReporter
             else
             {
                 var ok = NativeMethods.CopyFileW(GetWin32LongPath(sourceFileName), GetWin32LongPath(destFileName), !overwrite);
-                if (!ok) ThrowWin32Exception();
+                if (!ok)
+                {
+                    ThrowWin32Exception();
+                }
             }
         }
 
@@ -356,7 +356,10 @@ namespace DirectoryReporter
             else
             {
                 var ok = NativeMethods.MoveFileW(GetWin32LongPath(sourceFileName), GetWin32LongPath(destFileName));
-                if (!ok) ThrowWin32Exception();
+                if (!ok)
+                {
+                    ThrowWin32Exception();
+                }
             }
         }
 
@@ -393,13 +396,22 @@ namespace DirectoryReporter
                 var data = new byte[fs.Length];
                 fs.Read(data, 0, data.Length);
                 var str = encoding.GetString(data);
-                if (str.Contains("\r")) return str.Split(new[] { "\r\n" }, StringSplitOptions.None);
+                if (str.Contains("\r"))
+                {
+                    return str.Split(new[] { "\r\n" }, StringSplitOptions.None);
+                }
+
                 return str.Split('\n');
             }
         }
+
         public static byte[] ReadAllBytes(string path)
         {
-            if (path.Length < MAX_PATH) return System.IO.File.ReadAllBytes(path);
+            if (path.Length < MAX_PATH)
+            {
+                return System.IO.File.ReadAllBytes(path);
+            }
+
             var fileHandle = GetFileHandle(GetWin32LongPath(path));
 
             using (var fs = new System.IO.FileStream(fileHandle, System.IO.FileAccess.Read))
@@ -409,7 +421,6 @@ namespace DirectoryReporter
                 return data;
             }
         }
-
 
         public static void SetAttributes(string path, FileAttributes attributes)
         {
@@ -428,37 +439,69 @@ namespace DirectoryReporter
 
         private static SafeFileHandle CreateFileForWrite(string filename)
         {
-            if (filename.Length >= MAX_PATH) filename = GetWin32LongPath(filename);
+            if (filename.Length >= MAX_PATH)
+            {
+                filename = GetWin32LongPath(filename);
+            }
+
             SafeFileHandle hfile = NativeMethods.CreateFile(filename, (int)NativeMethods.FILE_GENERIC_WRITE, NativeMethods.FILE_SHARE_NONE, IntPtr.Zero, NativeMethods.CREATE_ALWAYS, 0, IntPtr.Zero);
-            if (hfile.IsInvalid) ThrowWin32Exception();
+            if (hfile.IsInvalid)
+            {
+                ThrowWin32Exception();
+            }
+
             return hfile;
         }
 
         private static SafeFileHandle CreateFileForAppend(string filename)
         {
-            if (filename.Length >= MAX_PATH) filename = GetWin32LongPath(filename);
+            if (filename.Length >= MAX_PATH)
+            {
+                filename = GetWin32LongPath(filename);
+            }
+
             SafeFileHandle hfile = NativeMethods.CreateFile(filename, (int)NativeMethods.FILE_GENERIC_WRITE, NativeMethods.FILE_SHARE_NONE, IntPtr.Zero, NativeMethods.CREATE_NEW, 0, IntPtr.Zero);
             if (hfile.IsInvalid)
             {
                 hfile = NativeMethods.CreateFile(filename, (int)NativeMethods.FILE_GENERIC_WRITE, NativeMethods.FILE_SHARE_NONE, IntPtr.Zero, NativeMethods.OPEN_EXISTING, 0, IntPtr.Zero);
-                if (hfile.IsInvalid) ThrowWin32Exception();
+                if (hfile.IsInvalid)
+                {
+                    ThrowWin32Exception();
+                }
             }
+
             return hfile;
         }
 
         internal static SafeFileHandle GetFileHandle(string filename)
         {
-            if (filename.Length >= MAX_PATH) filename = GetWin32LongPath(filename);
+            if (filename.Length >= MAX_PATH)
+            {
+                filename = GetWin32LongPath(filename);
+            }
+
             SafeFileHandle hfile = NativeMethods.CreateFile(filename, (int)NativeMethods.FILE_GENERIC_READ, NativeMethods.FILE_SHARE_READ, IntPtr.Zero, NativeMethods.OPEN_EXISTING, 0, IntPtr.Zero);
-            if (hfile.IsInvalid) ThrowWin32Exception();
+            if (hfile.IsInvalid)
+            {
+                ThrowWin32Exception();
+            }
+
             return hfile;
         }
 
         internal static SafeFileHandle GetFileHandleWithWrite(string filename)
         {
-            if (filename.Length >= MAX_PATH) filename = GetWin32LongPath(filename);
+            if (filename.Length >= MAX_PATH)
+            {
+                filename = GetWin32LongPath(filename);
+            }
+
             SafeFileHandle hfile = NativeMethods.CreateFile(filename, (int)(NativeMethods.FILE_GENERIC_READ | NativeMethods.FILE_GENERIC_WRITE | NativeMethods.FILE_WRITE_ATTRIBUTES), NativeMethods.FILE_SHARE_NONE, IntPtr.Zero, NativeMethods.OPEN_EXISTING, 0, IntPtr.Zero);
-            if (hfile.IsInvalid) ThrowWin32Exception();
+            if (hfile.IsInvalid)
+            {
+                ThrowWin32Exception();
+            }
+
             return hfile;
         }
 
@@ -475,11 +518,13 @@ namespace DirectoryReporter
                 hfile = NativeMethods.CreateFile(longFilename, (int)NativeMethods.FILE_GENERIC_READ, NativeMethods.FILE_SHARE_READ, IntPtr.Zero, NativeMethods.OPEN_EXISTING, 0, IntPtr.Zero);
             }
 
-            if (hfile.IsInvalid) ThrowWin32Exception();
+            if (hfile.IsInvalid)
+            {
+                ThrowWin32Exception();
+            }
 
             return new System.IO.FileStream(hfile, access);
         }
-
 
         [DebuggerStepThrough]
         public static void ThrowWin32Exception()
@@ -493,7 +538,10 @@ namespace DirectoryReporter
 
         public static string GetWin32LongPath(string path)
         {
-            if (path.StartsWith(@"\\?\")) return path;
+            if (path.StartsWith(@"\\?\"))
+            {
+                return path;
+            }
 
             if (path.StartsWith("\\"))
             {
@@ -507,9 +555,14 @@ namespace DirectoryReporter
             {
                 var currdir = Environment.CurrentDirectory;
                 path = Combine(currdir, path);
-                while (path.Contains("\\.\\")) path = path.Replace("\\.\\", "\\");
+                while (path.Contains("\\.\\"))
+                {
+                    path = path.Replace("\\.\\", "\\");
+                }
+
                 path = @"\\?\" + path;
             }
+
             return path.TrimEnd('.'); ;
         }
 
@@ -517,7 +570,6 @@ namespace DirectoryReporter
         {
             return path1.TrimEnd('\\') + "\\" + path2.TrimStart('\\').TrimEnd('.'); ;
         }
-
 
         #endregion
 
@@ -596,7 +648,11 @@ namespace DirectoryReporter
 
         public static void CreateDirectory(string path)
         {
-            if (string.IsNullOrWhiteSpace(path)) return;
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return;
+            }
+
             if (path.Length < MAX_PATH)
             {
                 System.IO.Directory.CreateDirectory(path);
@@ -634,7 +690,10 @@ namespace DirectoryReporter
                 if (!recursive)
                 {
                     bool ok = NativeMethods.RemoveDirectory(GetWin32LongPath(path));
-                    if (!ok) ThrowWin32Exception();
+                    if (!ok)
+                    {
+                        ThrowWin32Exception();
+                    }
                 }
                 else
                 {
@@ -642,7 +701,6 @@ namespace DirectoryReporter
                 }
             }
         }
-
 
         private static void DeleteDirectories(string[] directories)
         {
@@ -653,16 +711,24 @@ namespace DirectoryReporter
                 {
                     LongFile.Delete(file);
                 }
+
                 directories = LongDirectory.GetDirectories(directory, null, System.IO.SearchOption.TopDirectoryOnly);
                 DeleteDirectories(directories);
                 bool ok = NativeMethods.RemoveDirectory(GetWin32LongPath(directory));
-                if (!ok) ThrowWin32Exception();
+                if (!ok)
+                {
+                    ThrowWin32Exception();
+                }
             }
         }
 
         public static bool Exists(string path)
         {
-            if (path.Length < MAX_PATH) return System.IO.Directory.Exists(path);
+            if (path.Length < MAX_PATH)
+            {
+                return System.IO.Directory.Exists(path);
+            }
+
             return LongExists(GetWin32LongPath(path));
         }
 
@@ -671,7 +737,6 @@ namespace DirectoryReporter
             var attr = NativeMethods.GetFileAttributesW(path);
             return (attr != NativeMethods.INVALID_FILE_ATTRIBUTES && ((attr & NativeMethods.FILE_ATTRIBUTE_DIRECTORY) == NativeMethods.FILE_ATTRIBUTE_DIRECTORY));
         }
-
 
         public static string[] GetDirectories(string path)
         {
@@ -740,7 +805,6 @@ namespace DirectoryReporter
             return GetFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
-
         public static string[] GetFiles(string path, string searchPattern, System.IO.SearchOption searchOption)
         {
             searchPattern = searchPattern ?? "*";
@@ -750,7 +814,7 @@ namespace DirectoryReporter
 
             if (searchOption == SearchOption.AllDirectories)
             {
-                //Add all the subpaths
+                // Add all the subpaths
                 dirs.AddRange(LongDirectory.GetDirectories(path, null, SearchOption.AllDirectories));
             }
 
@@ -785,8 +849,6 @@ namespace DirectoryReporter
             return files.ToArray();
         }
 
-
-
         public static void Move(string sourceDirName, string destDirName)
         {
             if (sourceDirName.Length < MAX_PATH || destDirName.Length < MAX_PATH)
@@ -796,13 +858,14 @@ namespace DirectoryReporter
             else
             {
                 var ok = NativeMethods.MoveFileW(GetWin32LongPath(sourceDirName), GetWin32LongPath(destDirName));
-                if (!ok) ThrowWin32Exception();
+                if (!ok)
+                {
+                    ThrowWin32Exception();
+                }
             }
         }
 
         #region Helper methods
-
-
 
         [DebuggerStepThrough]
         public static void ThrowWin32Exception()
@@ -817,7 +880,10 @@ namespace DirectoryReporter
         public static string GetWin32LongPath(string path)
         {
 
-            if (path.StartsWith(@"\\?\")) return path;
+            if (path.StartsWith(@"\\?\"))
+            {
+                return path;
+            }
 
             var newpath = path;
             if (newpath.StartsWith("\\"))
@@ -832,16 +898,29 @@ namespace DirectoryReporter
             {
                 var currdir = Environment.CurrentDirectory;
                 newpath = Combine(currdir, newpath);
-                while (newpath.Contains("\\.\\")) newpath = newpath.Replace("\\.\\", "\\");
+                while (newpath.Contains("\\.\\"))
+                {
+                    newpath = newpath.Replace("\\.\\", "\\");
+                }
+
                 newpath = @"\\?\" + newpath;
             }
+
             return newpath.TrimEnd('.');
         }
 
         private static string GetCleanPath(string path)
         {
-            if (path.StartsWith(@"\\?\UNC\")) return @"\\" + path.Substring(8);
-            if (path.StartsWith(@"\\?\")) return path.Substring(4);
+            if (path.StartsWith(@"\\?\UNC\"))
+            {
+                return @"\\" + path.Substring(8);
+            }
+
+            if (path.StartsWith(@"\\?\"))
+            {
+                return path.Substring(4);
+            }
+
             return path;
         }
 
@@ -854,10 +933,11 @@ namespace DirectoryReporter
                 prefix += @"UNC\";
                 unc = true;
             }
+
             var split = path.Split('\\');
             int i = unc ? 6 : 4;
             var list = new List<string>();
-            
+
             var sb = new StringBuilder();
 
             for (int a = 0; a < i; a++)
@@ -885,7 +965,6 @@ namespace DirectoryReporter
         {
             return path1.TrimEnd('\\') + "\\" + path2.TrimStart('\\').TrimEnd('.');
         }
-
 
         #endregion
     }

@@ -11,20 +11,24 @@ namespace DirectoryReporter
         FolderDifferent,
         FolderMissing,
         FileDifferent,
-        FileMissing
+        FileMissing,
     }
 
     public class Difference
     {
         public string PathValue { get; set; }
+
         public DiffType Type { get; set; }
     }
 
     public class DirectoryDiffItem : IDirectoryInfo
     {
         public string Path1 { get; private set; }
+
         public string Path2 { get; private set; }
+
         public long DiffCount { get; private set; }
+
         public DiffType Type { get; set; }
 
         public List<IDirectoryInfo> Children { get; private set; }
@@ -32,33 +36,35 @@ namespace DirectoryReporter
         public static class Activity
         {
             public static string CurrentDirectory { get; set; }
+
             public static int DiffCount { get; set; }
+
             public static bool Cancel { get; set; }
         }
 
         public DirectoryDiffItem(string path1, string path2)
         {
-            Path1 = path1;
-            Path2 = path2;
+            this.Path1 = path1;
+            this.Path2 = path2;
         }
 
         private DirectoryDiffItem(string path1, string path2, DiffType type)
         {
-            Path1 = path1;
-            Path2 = path2;
-            Type = type;
+            this.Path1 = path1;
+            this.Path2 = path2;
+            this.Type = type;
         }
 
         public string DirectoryName
         {
-            get { return Path1.Substring(Path1.LastIndexOf("\\") + 1); }
+            get { return this.Path1.Substring(this.Path1.LastIndexOf("\\") + 1); }
         }
 
         public string PathValue
         {
             get
             {
-                return Path1;
+                return this.Path1;
             }
         }
 
@@ -66,8 +72,8 @@ namespace DirectoryReporter
         {
             get
             {
-                var label = Type == DiffType.FileMissing || Type == DiffType.FolderMissing ? " (+)" : "";
-                return $"{Path.GetFileName(PathValue)}{label}";
+                var label = this.Type == DiffType.FileMissing || this.Type == DiffType.FolderMissing ? " (+)" : "";
+                return $"{Path.GetFileName(this.PathValue)}{label}";
             }
         }
 
@@ -75,7 +81,7 @@ namespace DirectoryReporter
         {
             get
             {
-                return Type == DiffType.FolderMissing || Type == DiffType.FolderDifferent;
+                return this.Type == DiffType.FolderMissing || this.Type == DiffType.FolderDifferent;
             }
         }
 
@@ -83,15 +89,15 @@ namespace DirectoryReporter
         {
             get
             {
-                return Type == DiffType.FolderDifferent || Type == DiffType.FolderMissing ? Color.Blue : Color.Black;
+                return this.Type == DiffType.FolderDifferent || this.Type == DiffType.FolderMissing ? Color.Blue : Color.Black;
             }
         }
 
         private void InitChildren()
         {
-            if (Children == null)
+            if (this.Children == null)
             {
-                Children = new List<IDirectoryInfo>();
+                this.Children = new List<IDirectoryInfo>();
             }
         }
 
@@ -106,44 +112,46 @@ namespace DirectoryReporter
             Activity.DiffCount = 0;
             Activity.Cancel = false;
 
-            DiffCount = 0;
+            this.DiffCount = 0;
 
-            if (!Directory.Exists(Path2))
+            if (!Directory.Exists(this.Path2))
             {
-                DiffCount++;
-                Type = DiffType.FolderMissing;
-                return DiffCount;
+                this.DiffCount++;
+                this.Type = DiffType.FolderMissing;
+                return this.DiffCount;
             }
 
-            var path1Files = Directory.GetFiles(Path1, "*.*");
+            var path1Files = Directory.GetFiles(this.Path1, "*.*");
 
             var extensionFilter = new string[] { ".log", ".pdb" }.ToList();
 
             foreach (var path1File in path1Files)
             {
-                var path2File = Utils.TranslatePath(path1File, Path2);
+                var path2File = Utils.TranslatePath(path1File, this.Path2);
 
                 if (extensionFilter.IndexOf(Path.GetExtension(path1File)) >= 0)
+                {
                     continue;
+                }
 
                 try
                 {
                     if (!File.Exists(path2File))
                     {
-                        DiffCount++;
-                        InitChildren();
-                        Children.Add(new DirectoryDiffItem(path1File, path2File, DiffType.FileMissing));
+                        this.DiffCount++;
+                        this.InitChildren();
+                        this.Children.Add(new DirectoryDiffItem(path1File, path2File, DiffType.FileMissing));
                     }
                     else
                     {
                         var info1 = new FileInfo(path1File);
                         var info2 = new FileInfo(path2File);
-                        
+
                         if (info1.Length != info2.Length)
                         {
-                            DiffCount++;
-                            InitChildren();
-                            Children.Add(new DirectoryDiffItem(path1File, path2File, DiffType.FileDifferent));
+                            this.DiffCount++;
+                            this.InitChildren();
+                            this.Children.Add(new DirectoryDiffItem(path1File, path2File, DiffType.FileDifferent));
                         }
                     }
                 }
@@ -153,12 +161,12 @@ namespace DirectoryReporter
                 }
             }
 
-            var subDirectories = Directory.GetDirectories(Path1);
+            var subDirectories = Directory.GetDirectories(this.Path1);
 
             foreach (var subDirectory1 in subDirectories)
             {
                 var dirName = Path.GetFileName(subDirectory1);
-                var subDirectory2 = Path.Combine(Path2, dirName);
+                var subDirectory2 = Path.Combine(this.Path2, dirName);
 
                 if (dirName.StartsWith("$") || dirName.StartsWith(".git") || dirName.StartsWith(".cache") || dirName == "Debug" || dirName == "Release")
                 {
@@ -167,16 +175,16 @@ namespace DirectoryReporter
 
                 if (Activity.Cancel == true)
                 {
-                    return DiffCount;
+                    return this.DiffCount;
                 }
 
                 Activity.CurrentDirectory = subDirectory1;
 
                 if (!Directory.Exists(subDirectory2))
                 {
-                    InitChildren();
-                    DiffCount++;
-                    Children.Add(new DirectoryDiffItem(subDirectory1, subDirectory2, DiffType.FolderMissing));
+                    this.InitChildren();
+                    this.DiffCount++;
+                    this.Children.Add(new DirectoryDiffItem(subDirectory1, subDirectory2, DiffType.FolderMissing));
                     continue;
                 }
 
@@ -186,15 +194,17 @@ namespace DirectoryReporter
 
                 if (subDirDiffCount > 0)
                 {
-                    if (Children == null)
-                        Children = new List<IDirectoryInfo>();
+                    if (this.Children == null)
+                    {
+                        this.Children = new List<IDirectoryInfo>();
+                    }
 
-                    Children.Add(childInfo);
-                    DiffCount += subDirDiffCount;
+                    this.Children.Add(childInfo);
+                    this.DiffCount += subDirDiffCount;
                 }
             }
 
-            return DiffCount;
+            return this.DiffCount;
         }
     }
 }
