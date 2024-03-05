@@ -29,7 +29,8 @@
 	-->
   </ItemGroup>
   <ItemGroup>
-    <SonarQubeSetting Include="sonar.coverage.exclusions"> <Value>**/*.xml,packages/**/*,**/obj/**/*,**/*.resx,**/*.dll,**/*.exe,**/Tests/**/*,Tests/**/*,**/*Test.cs,**/*Test.cs,**/obj/**/*,**/generated/**/*,**/*.Designer.cs,**/SharedAssemblyInfo.cs,**/Program.cs,**/*.xaml.cs</Value>
+    <SonarQubeSetting Include="sonar.coverage.exclusions">
+      <Value>**/*.xml,packages/**/*,**/obj/**/*,**/*.resx,**/*.dll,**/*.exe,**/Tests/**/*,Tests/**/*,**/*Test.cs,**/*Test.cs,**/obj/**/*,**/generated/**/*,**/*.Designer.cs,**/SharedAssemblyInfo.cs,**/Program.cs,**/*.xaml.cs</Value>
     </SonarQubeSetting>
     <SonarQubeSetting Include="sonar.exclusions">
       <Value>**/*.xml,packages/**/*,**/obj/**/*,**/*.resx,**/*.dll,**/*.exe,**/obj/**/*,**/generated/**/*,**/*.Designer.cs,**/AssemblyInfo.cs</Value>

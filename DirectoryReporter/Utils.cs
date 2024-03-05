@@ -210,7 +210,6 @@ namespace DirectoryReporter
     {
         public static string GetShortPathName(string path)
         {
-            var holdPos = path.IndexOf(@"\\");
             StringBuilder shortPath = new StringBuilder(255);
             NativeMethods.GetShortPathName(path, shortPath, shortPath.Capacity);
             return shortPath.ToString();

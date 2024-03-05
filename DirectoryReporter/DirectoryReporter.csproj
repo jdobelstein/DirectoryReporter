@@ -6,7 +6,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>DirectoryReporter</RootNamespace>
     <AssemblyName>DirectoryReporter</AssemblyName>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFrameworks>net462</TargetFrameworks>
     <AssemblyTitle>DirectoryReporter</AssemblyTitle>
     <Company>Microsoft</Company>
     <Product>DirectoryReporter</Product>
