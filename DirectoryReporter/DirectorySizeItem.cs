@@ -73,7 +73,7 @@ namespace DirectoryReporter
 
         public long Populate()
         {
-            if (Activity.Cancel == true)
+            if (Activity.Cancel)
             {
                 return 0;
             }
@@ -91,7 +91,7 @@ namespace DirectoryReporter
                     continue;
                 }
 
-                if (Activity.Cancel == true)
+                if (Activity.Cancel)
                 {
                     return this.TotalSize;
                 }
